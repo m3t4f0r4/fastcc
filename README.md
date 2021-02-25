@@ -1,5 +1,5 @@
 # fastcc. compile fast...
-
+![Logo](https://github.com/m3t4f0r4/fastcc/blob/main/logo.png)
 ## About fastcc
 
 Have you ever compiled the linux kernel source? a lot of time huh?
