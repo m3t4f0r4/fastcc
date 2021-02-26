@@ -30,6 +30,10 @@ I compiled hashcat with fastcc...result?
 
 Cracked 16-byte length passwords within seconds dude!
 
+## About
+
+Created by @m3t4f0r4 and @blueudp
+
 ## Contact
 
 If you want support for Windows PE file compilation then shut up!
