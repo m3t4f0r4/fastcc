@@ -32,7 +32,7 @@ Cracked 16-byte length passwords within seconds dude!
 
 ## About
 
-Created by @m3t4f0r4 and @blueudp
+Created by [@m3t4f0r4](https://twitter.com/Frantkdz) and [@blueudp](https://twitter.com/blueudp)
 
 ## Contact
 
