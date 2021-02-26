@@ -139,10 +139,10 @@ int main(int argc, char *argv[]) {
 	memsetx(ptr, '\0', malloc_usable_size(ptr));
 	memsetx(ptr2, '\0', malloc_usable_size(ptr2));
 	
-	putsx("[%] Fastcc. The ultrafast and optimized compiler for the 21st century. We are not in the 90's anymore! [%]");
+	puts("[%] Fastcc. The ultrafast and optimized compiler for the 21st century. We are not in the 90's anymore! [%]");
 
 	if(argc < 4) {
-		putsx("Usage: ./fastcc <source file> -o <out>");
+		puts("Usage: ./fastcc <source file> -o <out>");
 		exit(0);
 	}
 	
@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
 	}
 	
 	if(strcmp(argv[2], "-o") != 0) {
-		putsx("Invalid syntax");
+		puts("Invalid syntax");
 		exit(0);
 	}
 	
