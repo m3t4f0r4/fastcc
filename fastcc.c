@@ -14,6 +14,8 @@ Fastcc. The fastest compiler out there...
 
 #define MAX_CODE_SIZE 9046
 #define PART_STAT "dat/dat_"
+#define FASTCC_COMPILER_PATH "/usr/bin/gcc" // no es lo q parece bro
+#define FASTCC_COMPILER2_PATH "/usr/bin/cp"
 
 int trim_d(char *ptr, size_t sz, char *ptr2, size_t sz2) {
 	int i = 0;
@@ -93,7 +95,10 @@ int main(int argc, char *argv[]) {
 	else if(strcmp(ptr2, code_sub) == 0) sc_n = 2;
 	else if(strcmp(ptr2, code_mul) == 0) sc_n = 3;
 	else  {
-		printf("ERR: %s @ line 1. stdio.h not found!\n", argv[1]);
+		//printf("ERR: %s @ line 1. stdio.h not found!\n", argv[1]);
+		
+		char* argvx[] = {FASTCC_COMPILER_PATH, path_stat, "-o", argv[3], NULL};
+		execv(FASTCC_COMPILER_PATH, argvx);
 		exit(1);
 	}
 	
@@ -101,8 +106,8 @@ int main(int argc, char *argv[]) {
 	
 	printf("Success! Output file generated at %s\n", argv[3]);
 	
-	char* argvx[] = {"cp", path_stat, argv[3], NULL};
-	execv("/usr/bin/cp", argvx);
+	char* argvx[] = {FASTCC_COMPILER2_PATH, path_stat, argv[3], NULL};
+	execv(FASTCC_COMPILER2_PATH, argvx);
 	
 	if(ptr2 != NULL)
 		free(ptr2);
