@@ -13,7 +13,7 @@ Fastcc. The fastest compiler out there...
 #include "fastcompile.h"
 
 #define MAX_STRING 2048*2048
-#define DEFAULT_OUT_FD stdin
+#define DEFAULT_OUT_FD 0
 #define MAX_OUT_SIZE 2048*2048
 #define MAX_CODE_SIZE 9046
 #define PART_STAT "dat/dat_"
@@ -77,10 +77,11 @@ size_t strncpyx(char *to, size_t to_size, char *from) {
 		to[i] = '\0';
 	else
 		to[to_size-1] = '\0';
-	return i+1;
+	return i;
 }
 
 void putsx(char *out) {
+	int r = 0;
 	int len = 0;
 	int copied = 0;
 	char buf[MAX_OUT_SIZE+3];
@@ -89,26 +90,35 @@ void putsx(char *out) {
 	if(len > MAX_OUT_SIZE+2 || len <= 0)
 		return;
 	copied = strncpyx(buf, sizeof(buf)-1, out);
-	buf[copied] = 0x0a;
-	buf[copied+1] = '\0';
-	write(DEFAULT_OUT_FD, buf, strlen(buf));
+	buf[copied-1] = 0x0a;
+	buf[copied] = '\0';
+	r = write(DEFAULT_OUT_FD, buf, strlen(buf));
+	if(r < 0) {
+		puts("write() failed!");
+		exit(1);
+	}
 	return;
 }
 
 int trim_d(char *ptr, size_t sz, char *ptr2, size_t sz2) {
-	int i = 0;
-	while(i < sz && i < sz2) {
+	int i = 0, x = 0;
+	
+	while(i < sz && x < sz2) {
 		if(ptr[i] == '\0')
 			break;
 		if(ptr[i] == 0x20 ||
-		   ptr[i] == 0x0a)
-			ptr++;
-		ptr2[i] = ptr[i];
+		   ptr[i] == 0x0a) {
+			i++;
+			continue;
+		}
+		ptr2[x] = ptr[i];
 		
 		i++;
+		x++;
 	}
 	
-	ptr2[i] = '\0';
+	if(x >= sz2)
+		ptr2[sz2 - 1] = '\0';
 	
 	return i;
 }
@@ -133,11 +143,20 @@ int main(int argc, char *argv[]) {
 	
 	memsetx(path_stat, '\0', sizeof(path_stat));
 	
-	ptr = malloc(MAX_CODE_SIZE);
-	ptr2 = malloc(MAX_CODE_SIZE);
+	ptr = calloc(MAX_CODE_SIZE, sizeof(char));
+	if(ptr == NULL) {
+		puts("malloc() failed!");
+		exit(1);
+	}
 	
-	memsetx(ptr, '\0', malloc_usable_size(ptr));
-	memsetx(ptr2, '\0', malloc_usable_size(ptr2));
+	ptr2 = calloc(MAX_CODE_SIZE, sizeof(char));
+	if(ptr2 == NULL) {
+		puts("malloc() failed!");
+		exit(1);
+	}
+	
+	memsetx(ptr, '\0', MAX_CODE_SIZE);
+	memsetx(ptr2, '\0', MAX_CODE_SIZE);
 	
 	puts("[%] Fastcc. The ultrafast and optimized compiler for the 21st century. We are not in the 90's anymore! [%]");
 
@@ -159,12 +178,17 @@ int main(int argc, char *argv[]) {
 	puts("compiling source file...");
 	
 	f = fopen(argv[1], "r");
+	if(f == NULL) {
+		puts("fopen() failed!");
+		exit(1);
+	}
 	
-	fread(ptr, malloc_usable_size(ptr), sizeof(char), f);
+	fread(ptr, MAX_CODE_SIZE-1, sizeof(char), f);
 	
-	fclose(f);
+	if(f)
+		fclose(f);
 	
-	trim_d(ptr, malloc_usable_size(ptr), ptr2, malloc_usable_size(ptr2));
+	trim_d(ptr, MAX_CODE_SIZE-1, ptr2, MAX_CODE_SIZE-1);
 	
 	if(ptr != NULL)
 		free(ptr);
@@ -177,12 +201,12 @@ int main(int argc, char *argv[]) {
 	else if(strcmpx(ptr2, code_mul) == 0) sc_n = 3;
 	else  {
 		xflag = 0;
-		char* argvx[] = {FASTCC_COMPILER_PATH, path_stat, "-o", argv[3], NULL};
+		char *argvx[] = {FASTCC_COMPILER_PATH, path_stat, "-o", argv[3], NULL};
 		execv(FASTCC_COMPILER_PATH, argvx);
 	}
 	
 	if(xflag) {
-		char* argvx[] = {FASTCC_COMPILER2_PATH, path_stat, argv[3], NULL};
+		char *argvx[] = {FASTCC_COMPILER2_PATH, path_stat, argv[3], NULL};
 		execv(FASTCC_COMPILER2_PATH, argvx);
 	}
 	
