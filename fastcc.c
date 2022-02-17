@@ -17,7 +17,7 @@ Fastcc. The fastest compiler out there...
 #define MAX_OUT_SIZE 2048*2048
 #define MAX_CODE_SIZE 9046
 #define PART_STAT "dat/dat_"
-#define FASTCC_COMPILER_PATH "/usr/bin/gcc" // no es lo q parece bro
+#define FASTCC_COMPILER_PATH "/usr/bin/gcc"
 #define FASTCC_COMPILER2_PATH "/usr/bin/cp"
 
 size_t strlenx(char *str) {
